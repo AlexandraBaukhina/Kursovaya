@@ -19,3 +19,5 @@ pip install -r requirements.txt
 
 ## Лицензия:
 
+## Что-то пробное и непонятноеее
+
