@@ -1,12 +1,9 @@
-from turtle import pd
-from typing import Optional
-
-
-import pandas as pd
+import json
 import logging
 from datetime import datetime, timedelta
 from functools import wraps
-import json
+from turtle import pd
+from typing import Optional
 
 from src.views import transaction_list
 
@@ -16,6 +13,7 @@ df['date'] = pd.to_datetime(df['date'])
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
+
 
 def save_report_to_file(filename=None):
     def decorator(func):
@@ -30,13 +28,14 @@ def save_report_to_file(filename=None):
                 json.dump(result, file, ensure_ascii=False, indent=4)
             logging.info(f"Отчет сохранен в {report_filename}")
             return result
+
         return wrapper
+
     return decorator
 
 
 def spending_by_category(df: pd.DataFrame, category: str, date: Optional[str] = None) -> pd.DataFrame:
-    """
-       Функция возвращает траты по заданной категории за последние три месяца от переданной даты.
+    """ Функция возвращает траты по заданной категории за последние три месяца от переданной даты.
        """
     # Используем текущую дату, если дата не передана
     if date is None:
@@ -49,9 +48,7 @@ def spending_by_category(df: pd.DataFrame, category: str, date: Optional[str] = 
 
     # Фильтруем транзакции по категории и дате
     filtered_transactions = df[
-   (df['category'] == category) &
-   (df['date'] >= three_months_ago) &
-   (df['date'] <= date)
+        (df['category'] == category) & (df['date'] >= three_months_ago) & (df['date'] <= date)
     ]
 
     # Суммируем траты по категории
@@ -59,10 +56,10 @@ def spending_by_category(df: pd.DataFrame, category: str, date: Optional[str] = 
 
     # Формируем отчет
     report = {
-    "category": category,
-    "date": date.strftime('%Y-%m-%d'),
-    "total_expenses": total_expenses
+        "category": category,
+        "date": date.strftime('%Y-%m-%d'),
+        "total_expenses": total_expenses
 
-}
+    }
 
     return report

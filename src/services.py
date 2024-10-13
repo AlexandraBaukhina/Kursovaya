@@ -2,7 +2,6 @@ import json
 
 from src.utils import read_excel
 
-
 transaction_list = read_excel()
 
 
@@ -15,9 +14,8 @@ def easy_search(search_string):
     # Фильтруем транзакции, которые содержат строку поиска в описании или категории
     matching_transactions = [
         transaction for transaction in transaction_list
-        if search_string_lower in transaction.get('description', '').lower() or
-           search_string_lower in transaction.get('category', '').lower()
-    ]
+        if search_string_lower in transaction.get('description', '').lower() or search_string_lower in transaction.get(
+            'category', '').lower()]
 
     # Возвращаем список подходящих транзакций в формате JSON
     return json.dumps(matching_transactions, ensure_ascii=False, indent=4)

@@ -1,16 +1,20 @@
-import requests
+import os
+
 import json
 from datetime import datetime
 
+import requests
+
 from src.utils import read_excel
 
-api_key = 'MV7UDI58N2N2F6MF'
+api_key = os.getenv('API_KEY')
 json_file_path = 'C:/Users/79200/PycharmProjects/Курсовая/user_settings.json'
 
 present_time = datetime.now().time()
 end_date = datetime.now().date()
 
 transaction_list = read_excel()
+
 
 # Приветствие
 def welcome():
@@ -53,7 +57,7 @@ def get_card_info(transaction_list):
 # Топ-5 транзакций по сумме платежа
 def top_five(transaction_list):
     """ Функция возвращает топ 5 транзакций """
-    sorted_list = sorted(transaction_list, key = lambda x: abs(x['amount']), reverse = True)
+    sorted_list = sorted(transaction_list, key=lambda x: abs(x['amount']), reverse=True)
     # Получаем из отсортированного списка 5 первых значений
     top_5 = sorted_list[:5]
     # Выводим информацию о каждой из топ-5 транзакций
@@ -87,7 +91,6 @@ def value_course():
     return currency_rates
 
 
-
 # Стоимость акций из S&P 500
 def get_stock_prices():
     """ Функция возвращает информацию по акциям: название и цену"""
@@ -107,7 +110,7 @@ def get_stock_prices():
             'function': 'TIME_SERIES_INTRADAY',
             'symbol': stock,
             'interval': '1min',
-            'apikey': api_key }
+            'apikey': api_key}
 
         # Отправка запроса к API
         response = requests.get(url, params=params)
@@ -146,7 +149,10 @@ def main_page():
     card_info = get_card_info(filtered_transactions)
     print("Информация по картам:")
     for card in card_info:
-        print(f"Последние 4 цифры: {card['lost_digits']}, Общая сумма расходов: {card['total_spent']}, Кешбэк: {card['cashback']}")
+        print(
+            f"Последние 4 цифры: {card['lost_digits']}, "
+            f"Общая сумма расходов: {card['total_spent']}, "
+            f"Кешбэк: {card['cashback']}")
 
     # Топ-5 транзакций
     top_transactions = top_five(filtered_transactions)
